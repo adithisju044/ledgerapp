@@ -1,0 +1,318 @@
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background: #eef2f7;
+}
+
+.app {
+max-width: 430px;
+margin: auto;
+min-height: 100vh;
+background: #f8fafc;
+padding-bottom: 80px;
+}
+
+header {
+background: #2563eb;
+color: white;
+padding: 16px;
+text-align: center;
+}
+
+.screen {
+display: none;
+padding: 16px;
+}
+
+.screen.active {
+display: block;
+}
+
+.summary-card {
+background: #2563eb;
+color: white;
+padding: 20px;
+border-radius: 18px;
+margin-bottom: 15px;
+}
+
+.summary-card p,
+.summary-card h1 {
+margin: 0;
+}
+
+.summary-row {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+}
+
+.summary-row div,
+.transaction,
+.contact-card {
+background: white;
+padding: 14px;
+border-radius: 14px;
+margin-bottom: 10px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+input,
+select,
+button {
+width: 100%;
+padding: 12px;
+margin-top: 10px;
+border-radius: 12px;
+border: 1px solid #ccc;
+box-sizing: border-box;
+}
+
+button {
+background: #2563eb;
+color: white;
+border: none;
+font-weight: bold;
+cursor: pointer;
+}
+
+.credit {
+color: green;
+font-weight: bold;
+}
+
+.debit {
+color: red;
+font-weight: bold;
+}
+
+.small {
+color: gray;
+font-size: 13px;
+}
+
+.contact-card {
+cursor: pointer;
+}
+
+.contact-card strong {
+display: block;
+font-size: 18px;
+margin-bottom: 8px;
+}
+
+#restoreFile {
+display: none;
+}
+
+/* MOBILE NAV */
+
+nav {
+position: fixed;
+bottom: 0;
+left: 50%;
+transform: translateX(-50%);
+max-width: 430px;
+width: 100%;
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+background: white;
+border-top: 1px solid #ddd;
+}
+
+nav button {
+background: white;
+color: #333;
+border-radius: 0;
+margin: 0;
+font-size: 13px;
+}
+
+/* DESKTOP DASHBOARD */
+
+#desktopApp {
+display: none;
+}
+
+.desktop-back-btn {
+display: none;
+}
+
+@media (min-width: 768px) {
+
+body {
+background: #f1f5f9;
+}
+
+#mobileApp {
+display: none !important;
+}
+
+#desktopApp {
+display: block !important;
+width: 95%;
+max-width: 1500px;
+margin: auto;
+padding: 30px;
+min-height: 100vh;
+}
+
+.desktop-header {
+background: linear-gradient(135deg, #2563eb, #1d4ed8);
+color: white;
+padding: 28px;
+border-radius: 22px;
+margin-bottom: 24px;
+}
+
+.desktop-header h1 {
+margin: 0;
+font-size: 32px;
+}
+
+.desktop-header p {
+margin-top: 8px;
+}
+
+.desktop-summary {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 20px;
+}
+
+.desktop-card {
+background: white;
+padding: 25px;
+border-radius: 18px;
+box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.desktop-card p {
+margin: 0;
+color: #64748b;
+}
+
+.desktop-card h2 {
+margin-top: 12px;
+font-size: 34px;
+}
+
+.balance-card {
+background: linear-gradient(135deg,#2563eb,#1d4ed8);
+color: white;
+}
+
+.balance-card p {
+color: white;
+}
+
+.credit-card {
+background: #f0fdf4;
+border: 2px solid #bbf7d0;
+}
+
+.credit-card h2 {
+color: #16a34a;
+}
+
+.debit-card {
+background: #fef2f2;
+border: 2px solid #fecaca;
+}
+
+.debit-card h2 {
+color: #dc2626;
+}
+
+.transaction-card {
+background: #faf5ff;
+border: 2px solid #e9d5ff;
+}
+
+.transaction-card h2 {
+color: #7c3aed;
+}
+
+.desktop-actions {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 20px;
+margin-top: 20px;
+}
+
+.desktop-actions button {
+height: 60px;
+}
+
+.desktop-main {
+display: grid;
+grid-template-columns: 1.5fr 1fr;
+gap: 20px;
+margin-top: 20px;
+}
+
+.desktop-panel {
+background: white;
+padding: 22px;
+border-radius: 18px;
+box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.quick-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 15px;
+}
+
+.quick-grid button {
+background: white;
+color: #111827;
+min-height: 100px;
+border-radius: 16px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.desktop-back-btn {
+display: block;
+background: white;
+color: #2563eb;
+margin-top: 10px;
+}
+.desktop-page {
+  display: none;
+}
+
+.active-desktop-page {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .desktop-page {
+    display: none;
+  }
+
+  .active-desktop-page {
+    display: block;
+  }
+}
+#authBox {
+  max-width: 400px;
+  margin: 80px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+#mobileApp,
+#desktopApp {
+  display: none;
+}
+body.auth-mode #mobileApp,
+body.auth-mode #desktopApp {
+  display: none !important;
+}
+
+body.auth-mode #authBox {
+  display: block !important;
+}

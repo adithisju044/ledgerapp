@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Ledger App</title>
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body class="auth-mode">
+<div id="authBox">
+  <h2>My Ledger Login</h2>
+
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+
+  <button onclick="registerUser()">Register</button>
+  <button onclick="loginUser()">Login</button>
+</div>
+<div id="mobileApp" class="app">
+
+  <header>
+    <h2>My Ledger</h2>
+    <button class="desktop-back-btn" onclick="backToDesktop()">⬅ Dashboard</button>
+  </header>
+
+  <section id="home" class="screen active">
+    <h3>Home</h3>
+
+    <div class="summary-card">
+      <p>Net Balance</p>
+      <h1 id="netBalance">₹0</h1>
+    </div>
+
+    <button onclick="backupData()">⬇ Backup Data</button>
+
+    <input type="file" id="restoreFile" accept=".json" onchange="restoreData(event)">
+
+    <button onclick="document.getElementById('restoreFile').click()">⬆ Restore Data</button>
+
+    <div class="summary-row">
+      <div>
+        <p>Total Credit</p>
+        <h3 id="totalCredit">₹0</h3>
+      </div>
+      <div>
+        <p>Total Debit</p>
+        <h3 id="totalDebit">₹0</h3>
+      </div>
+    </div>
+
+    <h3>Recent Transactions</h3>
+    <div id="recentTransactions"></div>
+  </section>
+
+  <section id="add" class="screen">
+    <h3>Add Transaction</h3>
+
+    <input type="date" id="date">
+
+    <select id="type">
+      <option value="Credit">Money In / Credit</option>
+      <option value="Debit">Money Out / Debit</option>
+    </select>
+
+    <input type="number" id="amount" placeholder="Amount">
+    <input type="date" id="dueDate">
+
+    <select id="personSelect">
+      <option value="">Select contact</option>
+    </select>
+
+    <input type="text" id="newPerson" placeholder="Or type new person name">
+
+    <select id="paymentMode">
+      <option value="Cash">Cash</option>
+      <option value="GPay">GPay</option>
+      <option value="PhonePe">PhonePe</option>
+      <option value="Paytm">Paytm</option>
+      <option value="Bank Transfer">Bank Transfer</option>
+      <option value="UPI">UPI</option>
+      <option value="Card">Card</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <input type="text" id="notes" placeholder="Notes optional">
+
+    <button onclick="addTransaction()">Save Transaction</button>
+  </section>
+
+  <section id="history" class="screen">
+    <h3>History</h3>
+    <button onclick="downloadCSV()">Download Ledger CSV</button>
+    <input type="text" id="search" placeholder="Search person..." onkeyup="displayTransactions()">
+    <div id="transactionList"></div>
+  </section>
+
+  <section id="contacts" class="screen">
+    <h3>Contacts</h3>
+
+    <input type="text" id="contactName" placeholder="Person name">
+    <input type="text" id="contactPhone" placeholder="Phone number optional">
+    <input type="number" id="openingCredit" placeholder="Opening Credit Balance - They owe me">
+    <input type="number" id="openingDebit" placeholder="Opening Debit Balance - I owe them">
+
+    <select id="contactType">
+      <option value="Customer">Customer</option>
+      <option value="Supplier">Supplier</option>
+      <option value="Friend">Friend</option>
+      <option value="Family">Family</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <button onclick="addContact()">Add Contact</button>
+
+    <div id="contactList"></div>
+  </section>
+
+  <section id="personLedger" class="screen">
+    <button onclick="showScreen('contacts')">← Back</button>
+
+    <h3 id="ledgerPersonName">Person Ledger</h3>
+    <button onclick="exportPersonPDF()">📄 Export PDF Statement</button>
+
+    <div class="summary-row">
+      <div>
+        <p>Total Credit</p>
+        <h3 id="personCredit">₹0</h3>
+      </div>
+      <div>
+        <p>Total Debit</p>
+        <h3 id="personDebit">₹0</h3>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <p>Net Balance</p>
+      <h1 id="personNet">₹0</h1>
+    </div>
+
+    <h3>Transactions</h3>
+    <div id="personTransactions"></div>
+  </section>
+
+  <section id="outstanding" class="screen">
+    <h3>Outstanding Summary</h3>
+
+    <h4>People Who Owe Me</h4>
+    <div id="receivableList"></div>
+
+    <h4>People I Owe</h4>
+    <div id="payableList"></div>
+  </section>
+
+  <nav>
+    <button onclick="showScreen('home')">🏠<br>Home</button>
+    <button onclick="showScreen('add')">➕<br>Add</button>
+    <button onclick="showScreen('history')">📜<br>History</button>
+    <button onclick="showScreen('contacts')">👥<br>Contacts</button>
+    <button onclick="showScreen('outstanding')">📊<br>Dues</button>
+  </nav>
+
+</div>
+
+
+<section id="desktopAddPage" class="desktop-page">
+  <h2>Add Transaction</h2>
+
+  <input type="date" id="desktopDate">
+
+  <select id="desktopType">
+    <option value="Credit">Money In / Credit</option>
+    <option value="Debit">Money Out / Debit</option>
+  </select>
+
+  <input type="number" id="desktopAmount" placeholder="Amount">
+
+  <select id="desktopPersonSelect">
+    <option value="">Select contact</option>
+  </select>
+
+  <input type="text" id="desktopNewPerson" placeholder="Or type new person name">
+
+  <select id="desktopPaymentMode">
+    <option value="Cash">Cash</option>
+    <option value="GPay">GPay</option>
+    <option value="PhonePe">PhonePe</option>
+    <option value="Paytm">Paytm</option>
+    <option value="Bank Transfer">Bank Transfer</option>
+    <option value="UPI">UPI</option>
+    <option value="Card">Card</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <input type="text" id="desktopNotes" placeholder="Notes optional">
+
+  <button onclick="addDesktopTransaction()">Save Transaction</button>
+  <button onclick="showDesktopPage('desktopDashboardPage')">Back to Dashboard</button>
+</section>
+ 
+<div id="desktopApp">
+
+  <section id="desktopDashboardPage" class="desktop-page active-desktop-page">
+
+    <header class="desktop-header">
+      <div>
+        <h1>Welcome back 👋</h1>
+        <p>Here's your financial overview</p>
+      </div>
+    </header>
+
+    <section class="desktop-summary">
+
+      <div class="desktop-card balance-card">
+        <p>Net Balance</p>
+        <h2 id="desktopNetBalance">₹0</h2>
+      </div>
+
+      <div class="desktop-card credit-card">
+        <p>Total Credit</p>
+        <h2 id="desktopTotalCredit">₹0</h2>
+      </div>
+
+      <div class="desktop-card debit-card">
+        <p>Total Debit</p>
+        <h2 id="desktopTotalDebit">₹0</h2>
+      </div>
+
+      <div class="desktop-card transaction-card">
+        <p>Total Transactions</p>
+        <h2 id="desktopTotalTransactions">0</h2>
+      </div>
+
+    </section>
+
+    <section class="desktop-actions">
+      <button onclick="backupData()">☁ Backup Data</button>
+      <button onclick="document.getElementById('restoreFile').click()">☁ Restore Data</button>
+    </section>
+
+    <section class="desktop-main">
+
+      <div class="desktop-panel">
+        <h3>Recent Transactions</h3>
+        <div id="desktopRecentTransactions"></div>
+      </div>
+
+      <div class="desktop-panel">
+        <h3>Quick Actions</h3>
+
+        <div class="quick-grid">
+<button onclick="showDesktopPage('desktopAddPage')">➕ Add Transaction</button>
+
+<button onclick="showDesktopPage('desktopContactsPage')">👥 Contacts</button>
+
+<button onclick="showDesktopPage('desktopDuesPage')">📊 Dues</button>
+
+<button onclick="showDesktopPage('desktopHistoryPage')">📜 History</button>
+
+<button onclick="downloadCSV()">📁 Export CSV</button>
+        </div>
+      </div>
+
+    </section>
+
+  </section>
+
+  <section id="desktopAddPage" class="desktop-page">
+    <h2>Add Transaction</h2>
+
+    <input type="date" id="desktopDate">
+
+    <select id="desktopType">
+      <option value="Credit">Money In / Credit</option>
+      <option value="Debit">Money Out / Debit</option>
+    </select>
+
+    <input type="number" id="desktopAmount" placeholder="Amount">
+
+    <select id="desktopPersonSelect">
+      <option value="">Select contact</option>
+    </select>
+
+    <input type="text" id="desktopNewPerson" placeholder="Or type new person name">
+
+    <select id="desktopPaymentMode">
+      <option value="Cash">Cash</option>
+      <option value="GPay">GPay</option>
+      <option value="PhonePe">PhonePe</option>
+      <option value="Paytm">Paytm</option>
+      <option value="Bank Transfer">Bank Transfer</option>
+      <option value="UPI">UPI</option>
+      <option value="Card">Card</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <input type="text" id="desktopNotes" placeholder="Notes optional">
+
+    <button onclick="addDesktopTransaction()">Save Transaction</button>
+    <button onclick="showDesktopPage('desktopDashboardPage')">← Back to Dashboard</button>
+  </section>
+
+  <section id="desktopContactsPage" class="desktop-page">
+    <h2>Contacts</h2>
+<input type="text" id="desktopContactName" placeholder="Person name">
+
+<input type="text" id="desktopContactPhone" placeholder="Phone number optional">
+
+<input type="number" id="desktopOpeningCredit" placeholder="Opening Credit Balance - They owe me">
+
+<input type="number" id="desktopOpeningDebit" placeholder="Opening Debit Balance - I owe them">
+
+<select id="desktopContactType">
+  <option value="Customer">Customer</option>
+  <option value="Supplier">Supplier</option>
+  <option value="Friend">Friend</option>
+  <option value="Family">Family</option>
+  <option value="Other">Other</option>
+</select>
+
+<button onclick="addDesktopContact()">Add Contact</button>
+    <div id="desktopContactsList"></div>
+
+    <button onclick="showDesktopPage('desktopDashboardPage')">← Back to Dashboard</button>
+  </section>
+
+  <section id="desktopDuesPage" class="desktop-page">
+    <h2>Dues</h2>
+
+    <h3>People Who Owe Me</h3>
+    <div id="desktopReceivableList"></div>
+
+    <h3>People I Owe</h3>
+    <div id="desktopPayableList"></div>
+
+    <button onclick="showDesktopPage('desktopDashboardPage')">← Back to Dashboard</button>
+  </section>
+
+  <h2>Transaction History</h2>
+
+  <input
+    type="text"
+    id="desktopHistorySearch"
+    placeholder="Search person..."
+    onkeyup="displayDesktopHistory()"
+  >
+
+  <div id="desktopHistoryList"></div>
+
+  <button onclick="showDesktopPage('desktopDashboardPage')">
+    ← Back to Dashboard
+  </button>
+
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD_QHqIJpYkq8RmpMYyXd5UWDBVRHTEPaI",
+    authDomain: "myledger-7b8cc.firebaseapp.com",
+    projectId: "myledger-7b8cc",
+    storageBucket: "myledger-7b8cc.firebasestorage.app",
+    messagingSenderId: "129536645493",
+    appId: "1:129536645493:web:0a3282a714e82a5b281b3c",
+    measurementId: "G-J1QJGHTGJ4"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+</script>
+<script src="script.js"></script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./service-worker.js")
+    .then(() => {
+      console.log("Service Worker Registered");
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
+</script>
+
+</body>
+</html>
