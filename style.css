@@ -304,9 +304,12 @@ margin-top: 10px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-#mobileApp,
-#desktopApp {
+#mobileApp {
   display: none;
+}
+
+#desktopApp {
+  display: block !important;
 }
 body.auth-mode #mobileApp,
 body.auth-mode #desktopApp {
@@ -314,5 +317,22 @@ body.auth-mode #desktopApp {
 }
 
 body.auth-mode #authBox {
+  display: block !important;
+}
+.desktop-page {
+  display: none !important;
+}
+
+.desktop-page.active-desktop-page {
+  display: block !important;
+}
+.desktop-page {
+  display: none !important;
+}
+
+.desktop-page.active-desktop-page {
+  display: block !important;
+}
+#desktopApp {
   display: block !important;
 }

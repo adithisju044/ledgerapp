@@ -212,10 +212,13 @@ function deleteTransaction(id) {
   if (!confirm("Are you sure you want to delete this transaction?")) return;
 
   transactions = transactions.filter(t => t.id !== id);
-  saveData();
-  refreshAll();
-}
 
+  saveData();
+  saveTransactionsToCloud();
+  refreshAll();
+
+  alert("Transaction deleted successfully");
+}
 function editTransaction(id) {
   let transaction = transactions.find(t => t.id === id);
 
@@ -711,7 +714,12 @@ function displayDesktopContacts() {
 
     list.innerHTML += `
       <div class="contact-card">
-        <strong>${contact.name}</strong>
+      <strong
+      style="cursor:pointer;color:#2563eb;"
+      onclick="openCustomerDetails('${contact.name}')"
+      > 
+      ${contact.name}
+      <strong>
         <div class="small">${contact.phone || "No phone number"}</div>
         <div class="small">${contact.contactType || "Other"}</div>
         <div class="${balance >= 0 ? "credit" : "debit"}">
@@ -841,7 +849,8 @@ function displayDesktopHistory() {
         <div class="small">
           ${t.notes || ""}
         </div>
-
+        <button onclick="editTransaction(${t.id})">✏️ Edit</button>
+        <button onclick="deleteTransaction(${t.id})">🗑 Delete</button>
       </div>
     `;
   });
@@ -885,6 +894,8 @@ auth.onAuthStateChanged(user => {
      loadContactsFromCloud();
 }
    refreshAll();
+   showDesktopPage("desktopDashboardPage");
+   showDesktopPage("desktopDashboardPage");
   } else {
     document.body.classList.add("auth-mode");
 
@@ -956,4 +967,54 @@ function loadTransactionsFromCloud() {
     .catch(error => {
       console.log(error);
     });
+}
+function logoutUser() {
+  auth.signOut()
+    .then(() => {
+      alert("Logged out successfully");
+    })
+    .catch(error => {
+      alert(error.message);
+    });
+}
+function openCustomerDetails(personName) {
+  console.log("Opening customer:", personName);
+
+  document.getElementById("customerTitle").innerText = personName;
+
+  let receivable = 0;
+  let payable = 0;
+
+  let customerTransactions = transactions.filter(t => t.person === personName);
+
+  customerTransactions.forEach(t => {
+    if (t.type === "Credit") {
+      receivable += Number(t.amount);
+    } else {
+      payable += Number(t.amount);
+    }
+  });
+
+  document.getElementById("customerReceivable").innerText = "₹" + receivable;
+  document.getElementById("customerPayable").innerText = "₹" + payable;
+
+  let list = document.getElementById("customerTransactionList");
+
+  list.innerHTML = "";
+
+  if (customerTransactions.length === 0) {
+    list.innerHTML = "<p>No transactions found</p>";
+  } else {
+    customerTransactions.forEach(t => {
+      list.innerHTML += `
+        <div class="transaction">
+          <strong>${t.type}</strong> ₹${t.amount}
+          <div class="small">${t.date} | ${t.paymentMode}</div>
+          <div class="small">${t.notes || ""}</div>
+        </div>
+      `;
+    });
+  }
+
+  showDesktopPage("desktopCustomerPage");
 }

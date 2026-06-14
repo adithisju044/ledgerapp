@@ -204,8 +204,10 @@
   <section id="desktopDashboardPage" class="desktop-page active-desktop-page">
 
     <header class="desktop-header">
+      <button onclick="logoutUser()">Logout</button>
       <div>
         <h1>Welcome back 👋</h1>
+      
         <p>Here's your financial overview</p>
       </div>
     </header>
@@ -263,7 +265,31 @@
       </div>
 
     </section>
+<section id="desktopCustomerPage" class="desktop-page">
 
+    <h2 id="customerTitle">Customer Details</h2>
+
+    <div class="desktop-card">
+
+        <p>
+            <strong>Total Receivable:</strong>
+            <span id="customerReceivable">₹0</span>
+        </p>
+
+        <p>
+            <strong>Total Payable:</strong>
+            <span id="customerPayable">₹0</span>
+        </p>
+
+    </div>
+
+    <div id="customerTransactionList"></div>
+
+    <button onclick="showDesktopPage('desktopContactsPage')">
+        ← Back to Contacts
+    </button>
+
+</section>
   </section>
 
   <section id="desktopAddPage" class="desktop-page">
@@ -336,6 +362,7 @@
 
     <button onclick="showDesktopPage('desktopDashboardPage')">← Back to Dashboard</button>
   </section>
+<section id="desktopHistoryPage" class="desktop-page">
 
   <h2>Transaction History</h2>
 
@@ -352,6 +379,7 @@
     ← Back to Dashboard
   </button>
 
+</section>
 </div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
